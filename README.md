@@ -1,5 +1,6 @@
 # Erai-raws-anime-parser
 Download the latest 50 (1080p, 720p, or 480/360p) anime episodes from Erai raws from a command line with qBitTorrent.
+<br>Built upon old HorribleSubs parser project.
 
 ## Download straight from the command line
 ![alt text](https://github.com/RainbowDog98/Erai-raws-anime-parser/blob/master/Images/mainDisplay.png)
