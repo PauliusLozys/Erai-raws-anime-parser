@@ -51,13 +51,13 @@ namespace AnimeDownloader
                     if (string.IsNullOrEmpty(choice))
                         continue;
                     var values = choice.Split(null);
-                    anime.AddToWatchList(values);
+                    anime.AddAnimesToWatchList(values);
                 }
-                else if (choice == "r")
+                else if (choice == "r") // Refresh
                 {
                     anime.ParseItemsXml(ref downloadLinks[linkIndex]);
                 }
-                else if (choice == "sq")
+                else if (choice == "sq") // Switch quality
                 {
                     Console.Write("0| 1080p\n1| 720p\n2| other\nPick quality: ");
                     choice = Console.ReadLine();
@@ -84,7 +84,7 @@ namespace AnimeDownloader
                         choice = Console.ReadLine().ToLower();
                         if (int.TryParse(choice, out int index))
                         {
-                            watchList.DownloadSelectedAnime(index);
+                            watchList.DownloadSelectedWatchListAnime(index);
                         }
                         else if (choice == "r")
                         {
@@ -100,7 +100,7 @@ namespace AnimeDownloader
                                 continue;
                             var values = choice.Split(null);
                             watchList.RemoveMultipleEntriesFromWatchList(values);
-                            anime.CheckIfAllInWatchList();
+                            anime.CheckIfContainsAnimesFromWatchList(); // Recheck the anime list
                         }
                         else if (choice == "q")
                             break;

@@ -7,15 +7,18 @@ namespace AnimeDownloader
 {
     class AnimeManager
     {
-        List<AnimeItem> AnimeList = new List<AnimeItem>();
-        WatchListManager WatchList;
-
+        private List<AnimeItem> AnimeList = new List<AnimeItem>();
+        private readonly WatchListManager WatchList;
 
         public AnimeManager(WatchListManager watchlist)
         {
             WatchList = watchlist;
         }
 
+        /// <summary>
+        /// Returns the amount of animes stored
+        /// </summary>
+        public int Count { get => AnimeList.Count; }
         public void DisplayAnimeList()
         {
             Console.WriteLine("CURRENT ANIME LIST:");
@@ -39,6 +42,28 @@ namespace AnimeDownloader
                     Console.WriteLine("{0,2}| {1,-90} {2}", i, AnimeList[i].Title, AnimeList[i].PubDate.ToShortDateString());
             }
             Console.ResetColor();
+        }
+        public void AddAnimesToWatchList(string[] values)
+        {
+            WatchList.AddToWatchList(values, AnimeList);
+            CheckIfContainsAnimesFromWatchList();
+        }
+        public void DownloadSelectedAnime(int index)
+        {
+            if (index < AnimeList.Count && index >= 0)
+            {
+                Utility.DownloadAnime(AnimeList[index].Link);
+                WatchList.SetAnimeAsDownloadedByAnimeItem(AnimeList[index]);
+            }
+            else
+                Program.DisplayError($"ERROR: THE NUMBER PROVIDED IS TOO LARGE");
+        }
+        public void CheckIfContainsAnimesFromWatchList()
+        {
+            foreach (var anime in AnimeList)
+            {
+                anime.IsInWatchList = WatchList.ContainsInWatchList(anime);
+            }
         }
         public void ParseItemsXml(ref string downloadUrl)
         {
@@ -77,34 +102,6 @@ namespace AnimeDownloader
             // Sort the list with possibly updated DateTime values
             WatchList.SortWatchList();
         }
-        public void AddToWatchList(string[] values)
-        {
-            WatchList.AddToWatchList(values, AnimeList);
-            CheckIfAllInWatchList();
-        }
-        public void DownloadSelectedAnime(int index)
-        {
-            if (index < AnimeList.Count && index >= 0)
-            {
-                Utility.DownloadAnime(AnimeList[index].Link);
-                WatchList.SetAnimeAsDownloadedByAnime(AnimeList[index]);
-            }
-            else
-                Program.DisplayError($"ERROR: THE NUMBER PROVIDED IS TOO LARGE");
-        }
-        public void CheckIfAllInWatchList()
-        {
-            foreach (var anime in AnimeList)
-            {
-                anime.IsInWatchList = WatchList.ContainsInWatchList(anime);
-            }
-        }
-
-        /// <summary>
-        /// Returns the amount of animes stored
-        /// </summary>
-        public int Count { get { return AnimeList.Count; } }
-
         private static string ExtractString(ref string str, string startingTag, string endingTag)
         {
             StringBuilder builder = new StringBuilder();

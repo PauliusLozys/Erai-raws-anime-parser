@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Text;
 
 namespace AnimeDownloader
 {
@@ -18,7 +16,8 @@ namespace AnimeDownloader
             // Read a watchlist file
             ReadWatchListFile();
         }
-        public int Count { get { return WatchList.Count; } }
+
+        public int Count { get => WatchList.Count; }
         public void DisplayWatchList()
         {
             static string todayPrint()
@@ -98,37 +97,30 @@ namespace AnimeDownloader
                     continue;
                 }
 
-                string title = animeList[index].Title;
+                var title = animeList[index].Title.AsSpan();
 
-                for (int i = title.Length - 1; i != 0; i--)
+                var animeToBeAdded = new WatchListItem()
                 {
-                    if (title[i] == '-')
-                    {
-                        var animeToBeAdded = new WatchListItem()
-                        {
-                            Title = title.Remove(i).Remove(0, 8),
-                            LatestEpisode = 0,
-                            IsDownloaded = false,
-                            ReleaseDay = animeList[index].PubDate,
-                            FinishedAiring = title.EndsWith("END")
-                        };
+                    Title = Utility.GetCleanName(title),
+                    LatestEpisode = 0,
+                    IsDownloaded = false,
+                    ReleaseDay = animeList[index].PubDate,
+                    FinishedAiring = title.EndsWith("END")
+                };
 
-                        // Check if it already exists in the watchlist
-                        if (WatchList.Contains(animeToBeAdded))
-                        {
-                            Program.DisplayError($"Anime \"{animeToBeAdded.Title}\" already exists in the watchlist");
-                            break;
-                        }
-
-                        // Add a new watchlist value
-                        WatchList.Add(animeToBeAdded);
-                        break;
-                    }
+                // Check if it already exists in the watchlist
+                if (WatchList.Contains(animeToBeAdded))
+                {
+                    Program.DisplayError($"Anime \"{animeToBeAdded.Title}\" already exists in the watchlist");
+                    break;
                 }
+
+                // Add a new watchlist value
+                WatchList.Add(animeToBeAdded);
+
             }
             WatchList.Sort();
         }
-        public void SortWatchList() => WatchList.Sort();
         public void RemoveMultipleEntriesFromWatchList(string[] indexes)
         {
             List<WatchListItem> tmp = new List<WatchListItem>(indexes.Length);
@@ -167,7 +159,7 @@ namespace AnimeDownloader
             {
                 if (anime.Title.Contains(item.Title))
                 {
-                    int episodeNumber = GetAnimesEpisodeNumber(anime.Title);
+                    int episodeNumber = Utility.GetAnimeEpisodeNumber(anime.Title);
                     if (episodeNumber > item.LatestEpisode)
                     {
                         // Newer version of the episode was found
@@ -187,7 +179,7 @@ namespace AnimeDownloader
             }
             return false;
         }
-        public void DownloadSelectedAnime(int index)
+        public void DownloadSelectedWatchListAnime(int index)
         {
             if (index < WatchList.Count && index >= 0)
             {
@@ -202,28 +194,13 @@ namespace AnimeDownloader
             else
                 Program.DisplayError($"ERROR: THE NUMBER PROVIDED IS TOO LARGE");
         }
-        private int GetAnimesEpisodeNumber(string AnimeName)
-        {
-            for (int i = AnimeName.Length - 1; i != 0; i--)
-            {
-                if (AnimeName[i] == '-')
-                {
-                    var newSplit = AnimeName.Substring(i).Split(' ');// FORMAT: [-][episodeNumber][othershit]...
-                    if (int.TryParse(newSplit[1], out int number))
-                        return number;
-                    else
-                        return -1;
-                }
-            }
-            return -1;
-        }
-        public void SetAnimeAsDownloadedByAnime(AnimeItem anime)
+        public void SetAnimeAsDownloadedByAnimeItem(AnimeItem anime)
         {
             foreach (var item in WatchList)
             {
                 if (anime.Title.Contains(item.Title))
                 {
-                    int episodeNumber = GetAnimesEpisodeNumber(anime.Title);
+                    int episodeNumber = Utility.GetAnimeEpisodeNumber(anime.Title);
                     if (episodeNumber == item.LatestEpisode)
                     {
                         item.IsDownloaded = true;
@@ -232,7 +209,8 @@ namespace AnimeDownloader
                     }
                 }
             }
-        }
+        } 
+        public void SortWatchList() => WatchList.Sort();
         public void WriteWatchListFile()
         {
             if (WatchList.Count == 0)
@@ -268,5 +246,6 @@ namespace AnimeDownloader
                 });
             }
         }
+        
     }
 }
