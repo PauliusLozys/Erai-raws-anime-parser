@@ -83,6 +83,7 @@ namespace AnimeDownloader
             {
                 tokens[i] = tokens[i].TrimEnd();
                 tokens[i] = Regex.Replace(tokens[i], "&#8211;", "-");
+                tokens[i] = Regex.Replace(tokens[i], "&#8217;", "'");
 
                 if (!tokens[i].EndsWith("</item>")) // Unneeded token, skipping it
                     continue;
