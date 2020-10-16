@@ -11,9 +11,9 @@ namespace AnimeDownloader
         static void Main(string[] args)
         {
             SetSettingsFromFile(out int linkIndex);
-            string[] downloadLinks = new string[] {"https://www.erai-rss.info/rss-1080/",
-                                                   "https://www.erai-rss.info/rss-720/",
-                                                   "https://www.erai-rss.info/rss-480/" };
+            string[] downloadLinks = new string[] {"https://www.erai-raws.info/rss-1080/",
+                                                   "https://www.erai-raws.info/rss-720/",
+                                                   "https://www.erai-raws.info/rss-480/" };
             string choice;
 
             WatchListManager watchList = new WatchListManager();
@@ -144,6 +144,5 @@ namespace AnimeDownloader
             using var fs = new StreamWriter("Settings.txt", false);
             fs.WriteLine($"{Console.WindowWidth} {Console.WindowHeight} {linkIndex}");
         }
-
     }
 }
