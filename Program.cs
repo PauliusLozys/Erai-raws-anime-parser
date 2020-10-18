@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Net;
 
 namespace AnimeDownloader
 {
@@ -11,9 +8,9 @@ namespace AnimeDownloader
         static void Main(string[] args)
         {
             SetSettingsFromFile(out int linkIndex);
-            string[] downloadLinks = new string[] {"https://www.erai-raws.info/rss-1080/",
-                                                   "https://www.erai-raws.info/rss-720/",
-                                                   "https://www.erai-raws.info/rss-480/" };
+            string[] downloadLinks = new string[] {"https://erai-raws.info/rss-1080-magnet",
+                                                   "https://erai-raws.info/rss-720-magnet",
+                                                   "https://erai-raws.info/rss-480-magnet"};
             string choice;
 
             WatchListManager watchList = new WatchListManager();
@@ -22,8 +19,6 @@ namespace AnimeDownloader
             AppDomain.CurrentDomain.ProcessExit += ExitEvent;
             void ExitEvent(object sender, EventArgs e)
             {
-                if (File.Exists(Utility.TempFile))
-                    File.Delete(Utility.TempFile);
                 watchList.WriteWatchListFile();
                 SaveSettingsToFile(ref linkIndex);
             }

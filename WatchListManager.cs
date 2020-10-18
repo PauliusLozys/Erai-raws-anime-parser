@@ -219,7 +219,7 @@ namespace AnimeDownloader
             using var fs = new StreamWriter(FileName, false);
             foreach (var item in WatchList)
             {
-                fs.WriteLine($"{item.Title};{item.LatestEpisode};{item.IsDownloaded};{item.ReleaseDay}");
+                fs.WriteLine($"{item.Title};{item.LatestEpisode};{item.IsDownloaded};{item.ReleaseDay};{item.FinishedAiring}");
             }
         }
         private void ReadWatchListFile()
@@ -232,9 +232,9 @@ namespace AnimeDownloader
             {
                 //Format title;latest episode;is downloaded
                 var line = fs.ReadLine().Split(';');
-                if (line.Length != 4)
+                if (line.Length != 5)
                 {
-                    Program.DisplayError("Error happened while reading the watchlist file");
+                    Program.DisplayError("Error happened while reading the watchlist file, so it won't be loaded");
                     return;
                 }
                 WatchList.Add(new WatchListItem()
@@ -242,7 +242,8 @@ namespace AnimeDownloader
                     Title = line[0],
                     LatestEpisode = int.Parse(line[1]),
                     IsDownloaded = bool.Parse(line[2]),
-                    ReleaseDay = DateTime.Parse(line[3])
+                    ReleaseDay = DateTime.Parse(line[3]),
+                    FinishedAiring = bool.Parse(line[4])
                 });
             }
         }
