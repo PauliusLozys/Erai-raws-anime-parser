@@ -72,9 +72,9 @@ namespace AnimeDownloader
             {
                 downloadedXml = Utility.WClient.DownloadString(downloadUrl);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw new Exception("ERROR: COULD NOT DOWNLOAD RSS FILE");
+                throw new Exception($"ERROR: COULD NOT DOWNLOAD RSS FILE: {downloadUrl}\n{e.Message}");
             }
             AnimeList.Clear();
 

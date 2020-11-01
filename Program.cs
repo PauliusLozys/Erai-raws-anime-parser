@@ -74,7 +74,7 @@ namespace AnimeDownloader
                     {
                         watchList.DisplayWatchList();
 
-                        Console.WriteLine("[q - go back to main window] [0-... - download anime] [r - multiple removal (eg. 1 5 10 30 ...)]");
+                        Console.WriteLine("[q - go back to main window] [0-... - download anime] [x - mark as downloaded (eg. 1 5 10 30 ...)] [r - multiple removal (eg. 1 5 10 30 ...)]");
                         Console.Write("Pick a choice: ");
                         choice = Console.ReadLine().ToLower();
                         if (int.TryParse(choice, out int index))
@@ -96,6 +96,22 @@ namespace AnimeDownloader
                             var values = choice.Split(null);
                             watchList.RemoveMultipleEntriesFromWatchList(values);
                             anime.CheckIfContainsAnimesFromWatchList(); // Recheck the anime list
+                        }
+                        else if (choice == "x")
+                        {
+                            if (watchList.Count == 0)
+                            {
+                                DisplayError($"ERROR: THERE ARE NO ENTRIES IN THE WATCHLIST");
+                                continue;
+                            }
+                            Console.Write("Mark animes as watched: ");
+                            choice = Console.ReadLine();
+
+                            if (string.IsNullOrEmpty(choice))
+                                continue;
+                            var values = choice.Split(null);
+                            watchList.SetAnimeAsDownloadedByWatchlistIndexes(values);
+
                         }
                         else if (choice == "q")
                             break;

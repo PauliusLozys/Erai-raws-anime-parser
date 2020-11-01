@@ -209,7 +209,19 @@ namespace AnimeDownloader
                     }
                 }
             }
-        } 
+        }
+        public void SetAnimeAsDownloadedByWatchlistIndexes(string[] indexes)
+        {
+            foreach (var item in indexes)
+            {
+                if (!int.TryParse(item, out int index) || index >= WatchList.Count || index < 0)
+                {
+                    Program.DisplayError($"ERROR: INVALID INDEX: {item} PROVIDED, SO IT WILL BE IGNORED");
+                    continue;
+                }
+                WatchList[index].IsDownloaded = true;
+            }
+        }
         public void SortWatchList() => WatchList.Sort();
         public void WriteWatchListFile()
         {
