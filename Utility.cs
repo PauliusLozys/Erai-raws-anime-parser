@@ -7,8 +7,17 @@ namespace AnimeDownloader
 {
     static class Utility
     {
+        
+
         public const string TorrentClientPath = @"C:\Program Files\qBittorrent\qbittorrent.exe";
         public static WebClient WClient = new WebClient();
+
+        public enum WindowHelp
+        {
+            MainWindowHelp,
+            WatchlistWindowHelp
+        }
+
         public static void DownloadAnime(string torrentLink)
         {
             Process.Start(TorrentClientPath, torrentLink);
@@ -111,6 +120,21 @@ namespace AnimeDownloader
             fs.WriteLine($"{Console.WindowWidth} {Console.WindowHeight} {linkIndex}");
         }
 
-
+        private static string GetHelpString(WindowHelp specificWindow) => specificWindow switch
+        {
+            WindowHelp.MainWindowHelp => "[Any other key - quit]\n[0-... - anime to be downloaded]\n[w - add to watch list (eg. 0 11 43 ...)]\n[dw - display watchlist]\n[sq - switch quality]\n[r - refresh]",
+            WindowHelp.WatchlistWindowHelp => "[q - go back to main window]\n[0-... - download anime]\n[x - mark as downloaded (eg. 1 5 10 30 ...)]\n[r - multiple removal (eg. 1 5 10 30 ...)]"
+        };
+        /// <summary>
+        /// Display the available commands
+        /// </summary>
+        /// <param name="specificWindow">Window whose commands should be displayed</param>
+        public static void DisplayHelp(WindowHelp specificWindow)
+        {
+            Console.WriteLine("\nAvailable options:");
+            Console.WriteLine(GetHelpString(specificWindow));
+            Console.WriteLine("Press any key to continue...");
+            Console.ReadKey(true);
+        }
     }
 }

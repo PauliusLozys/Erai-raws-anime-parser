@@ -31,7 +31,7 @@ namespace AnimeDownloader
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.ResetColor();
                 anime.DisplayAnimeList();
-                Console.WriteLine("[Any other key - quit] [0-... - anime to be downloaded] [w - add to watch list (eg. 0 11 43 ...)] [dw - display watchlist] [sq - switch quality] [r - refresh]");
+                Console.WriteLine("Type 'h' to get available commands");
                 Console.Write("Pick a choice: ");
                 choice = Console.ReadLine().ToLower();
 
@@ -51,6 +51,10 @@ namespace AnimeDownloader
                 else if (choice == "r") // Refresh
                 {
                     anime.ParseItemsXml(ref downloadLinks[linkIndex]);
+                }
+                else if (choice == "h")
+                {
+                    Utility.DisplayHelp(Utility.WindowHelp.MainWindowHelp);
                 }
                 else if (choice == "sq") // Switch quality
                 {
@@ -74,7 +78,7 @@ namespace AnimeDownloader
                     {
                         watchList.DisplayWatchList();
 
-                        Console.WriteLine("[q - go back to main window] [0-... - download anime] [x - mark as downloaded (eg. 1 5 10 30 ...)] [r - multiple removal (eg. 1 5 10 30 ...)]");
+                        Console.WriteLine("Type 'h' to get available commands");
                         Console.Write("Pick a choice: ");
                         choice = Console.ReadLine().ToLower();
                         if (int.TryParse(choice, out int index))
@@ -96,6 +100,10 @@ namespace AnimeDownloader
                             var values = choice.Split(null);
                             watchList.RemoveMultipleEntriesFromWatchList(values);
                             anime.CheckIfContainsAnimesFromWatchList(); // Recheck the anime list
+                        }
+                        else if (choice == "h")
+                        {
+                            Utility.DisplayHelp(Utility.WindowHelp.WatchlistWindowHelp);
                         }
                         else if (choice == "x")
                         {
@@ -121,9 +129,7 @@ namespace AnimeDownloader
                 {
                     break;
                 }
-
             }
         }
-       
     }
 }
