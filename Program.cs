@@ -7,7 +7,7 @@ namespace AnimeDownloader
     {
         static void Main(string[] args)
         {
-            SetSettingsFromFile(out int linkIndex);
+            Utility.SetSettingsFromFile(out int linkIndex);
             string[] downloadLinks = new string[] {"https://erai-raws.info/rss-1080-magnet",
                                                    "https://erai-raws.info/rss-720-magnet",
                                                    "https://erai-raws.info/rss-480-magnet"};
@@ -20,7 +20,7 @@ namespace AnimeDownloader
             void ExitEvent(object sender, EventArgs e)
             {
                 watchList.WriteWatchListFile();
-                SaveSettingsToFile(ref linkIndex);
+                Utility.SaveSettingsToFile(ref linkIndex);
             }
 
             anime.ParseItemsXml(ref downloadLinks[linkIndex]);
@@ -66,7 +66,7 @@ namespace AnimeDownloader
                         anime.ParseItemsXml(ref downloadLinks[linkIndex]);
                     }
                     else
-                        DisplayError($"ERROR: INVALID INDEX {choice} PROVIDED");
+                        Utility.DisplayError($"ERROR: INVALID INDEX {choice} PROVIDED");
                 }
                 else if (choice == "dw") // Display watch list
                 {
@@ -85,7 +85,7 @@ namespace AnimeDownloader
                         {
                             if (watchList.Count == 0)
                             {
-                                DisplayError($"ERROR: THERE ARE NO ENTRIES IN THE WATCHLIST");
+                                Utility.DisplayError($"ERROR: THERE ARE NO ENTRIES IN THE WATCHLIST");
                                 continue;
                             }
                             Console.Write("Add animes to be removed: ");
@@ -101,7 +101,7 @@ namespace AnimeDownloader
                         {
                             if (watchList.Count == 0)
                             {
-                                DisplayError($"ERROR: THERE ARE NO ENTRIES IN THE WATCHLIST");
+                                Utility.DisplayError($"ERROR: THERE ARE NO ENTRIES IN THE WATCHLIST");
                                 continue;
                             }
                             Console.Write("Mark animes as watched: ");
@@ -124,36 +124,6 @@ namespace AnimeDownloader
 
             }
         }
-        public static void DisplayError(string infoText)
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine(infoText);
-            Console.ResetColor();
-            Console.WriteLine("Press any key to continue...");
-            Console.ReadKey(true);
-        }
-        public static void SetSettingsFromFile(out int linkIndex)
-        {
-            if (!File.Exists("Settings.txt"))
-            {
-                linkIndex = 0; // Set default quality as highest
-                return;
-            }
-            using var fs = new StreamReader("Settings.txt");
-            var line = fs.ReadLine();
-            var sizes = line.Split();
-            if (sizes.Length == 3 && int.TryParse(sizes[0], out int Width) && int.TryParse(sizes[1], out int Height) && int.TryParse(sizes[2], out int LinkIndex))
-            {
-                Console.SetWindowSize(Width, Height);
-                linkIndex = LinkIndex;
-                return;
-            }
-            linkIndex = 0; // Set default quality as highest
-        }
-        public static void SaveSettingsToFile(ref int linkIndex)
-        {
-            using var fs = new StreamWriter("Settings.txt", false);
-            fs.WriteLine($"{Console.WindowWidth} {Console.WindowHeight} {linkIndex}");
-        }
+       
     }
 }

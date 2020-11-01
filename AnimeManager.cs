@@ -56,7 +56,7 @@ namespace AnimeDownloader
                 WatchList.SetAnimeAsDownloadedByAnimeItem(AnimeList[index]);
             }
             else
-                Program.DisplayError($"ERROR: THE NUMBER PROVIDED IS TOO LARGE");
+                Utility.DisplayError($"ERROR: THE NUMBER PROVIDED IS TOO LARGE");
         }
         public void CheckIfContainsAnimesFromWatchList()
         {

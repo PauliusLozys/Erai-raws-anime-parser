@@ -93,7 +93,7 @@ namespace AnimeDownloader
             {
                 if (!int.TryParse(item, out int index) || index >= animeList.Count || index < 0)
                 {
-                    Program.DisplayError($"ERROR: INVALID INDEX: {item} PROVIDED, SO IT WON'T BE ADDED");
+                    Utility.DisplayError($"ERROR: INVALID INDEX: {item} PROVIDED, SO IT WON'T BE ADDED");
                     continue;
                 }
 
@@ -111,7 +111,7 @@ namespace AnimeDownloader
                 // Check if it already exists in the watchlist
                 if (WatchList.Contains(animeToBeAdded))
                 {
-                    Program.DisplayError($"Anime \"{animeToBeAdded.Title}\" already exists in the watchlist");
+                    Utility.DisplayError($"Anime \"{animeToBeAdded.Title}\" already exists in the watchlist");
                     break;
                 }
 
@@ -138,7 +138,7 @@ namespace AnimeDownloader
                 }
                 else
                 {
-                    Program.DisplayError($"ERROR: INDEX {item} DOES NOT EXIST, STOPPING THE REMOVAL");
+                    Utility.DisplayError($"ERROR: INDEX {item} DOES NOT EXIST, STOPPING THE REMOVAL");
                     return;
                 }
             }
@@ -185,14 +185,14 @@ namespace AnimeDownloader
             {
                 if (string.IsNullOrEmpty(WatchList[index].LatestEpisodeLink))
                 {
-                    Program.DisplayError("ERROR: This anime has no link");
+                    Utility.DisplayError("ERROR: This anime has no link");
                     return;
                 }
                 Utility.DownloadAnime(WatchList[index].LatestEpisodeLink);
                 WatchList[index].IsDownloaded = true;
             }
             else
-                Program.DisplayError($"ERROR: THE NUMBER PROVIDED IS TOO LARGE");
+                Utility.DisplayError($"ERROR: THE NUMBER PROVIDED IS TOO LARGE");
         }
         public void SetAnimeAsDownloadedByAnimeItem(AnimeItem anime)
         {
@@ -216,7 +216,7 @@ namespace AnimeDownloader
             {
                 if (!int.TryParse(item, out int index) || index >= WatchList.Count || index < 0)
                 {
-                    Program.DisplayError($"ERROR: INVALID INDEX: {item} PROVIDED, SO IT WILL BE IGNORED");
+                    Utility.DisplayError($"ERROR: INVALID INDEX: {item} PROVIDED, SO IT WILL BE IGNORED");
                     continue;
                 }
                 WatchList[index].IsDownloaded = true;
@@ -246,7 +246,7 @@ namespace AnimeDownloader
                 var line = fs.ReadLine().Split(';');
                 if (line.Length != 5)
                 {
-                    Program.DisplayError("Error happened while reading the watchlist file, so it won't be loaded");
+                    Utility.DisplayError("Error happened while reading the watchlist file, so it won't be loaded");
                     return;
                 }
                 WatchList.Add(new WatchListItem()
