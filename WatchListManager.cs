@@ -204,7 +204,7 @@ namespace AnimeDownloader
                     if (episodeNumber == item.LatestEpisode)
                     {
                         item.IsDownloaded = true;
-                        item.ReleaseDay = anime.PubDate;
+                        //item.ReleaseDay = anime.PubDate;
                         return;
                     }
                 }

@@ -2,14 +2,15 @@
 using System.Diagnostics;
 using System.IO;
 using System.Net;
+using System.Runtime.InteropServices;
 
 namespace AnimeDownloader
 {
     static class Utility
     {
-        
 
-        public const string TorrentClientPath = @"C:\Program Files\qBittorrent\qbittorrent.exe";
+        public const string TorrentClientPathWindows = @"C:\Program Files\qBittorrent\qbittorrent.exe";
+        public const string TorrentClientPathLinux = @"/usr/bin/qbittorrent";
         public static WebClient WClient = new WebClient();
 
         public enum WindowHelp
@@ -20,7 +21,13 @@ namespace AnimeDownloader
 
         public static void DownloadAnime(string torrentLink)
         {
-            Process.Start(TorrentClientPath, torrentLink);
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                Process.Start(TorrentClientPathWindows, torrentLink);
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                Process.Start(TorrentClientPathLinux, torrentLink);
+            else
+                DisplayError("ERROR: can't download the torrent file");
+
         }
         /// <summary>
         /// Gets rid of episode number and quality tag at the beggining
@@ -102,7 +109,7 @@ namespace AnimeDownloader
             using var fs = new StreamReader("Settings.txt");
             var line = fs.ReadLine();
             var sizes = line.Split();
-            if (sizes.Length == 3 && int.TryParse(sizes[0], out int Width) && int.TryParse(sizes[1], out int Height) && int.TryParse(sizes[2], out int LinkIndex))
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && sizes.Length == 3 && int.TryParse(sizes[0], out int Width) && int.TryParse(sizes[1], out int Height) && int.TryParse(sizes[2], out int LinkIndex))
             {
                 Console.SetWindowSize(Width, Height);
                 linkIndex = LinkIndex;
