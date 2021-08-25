@@ -50,6 +50,7 @@ namespace AnimeDownloader
         }
         public void DownloadSelectedAnime(int index)
         {
+            Utility.WClient.Headers["User-Agent"] = "Mozilla/4.0 (Compatible; Windows NT 5.1; MSIE 6.0) ";
             if (index < AnimeList.Count && index >= 0)
             {
                 Utility.DownloadAnime(AnimeList[index].Link);
@@ -82,13 +83,15 @@ namespace AnimeDownloader
             for (int i = 0; i < tokens.Length; i++)
             {
                 tokens[i] = tokens[i].TrimEnd();
-                tokens[i] = Regex.Replace(tokens[i], "&#8211;", "-");
-                tokens[i] = Regex.Replace(tokens[i], "&#8217;", "'");
+                // NOTE: are those still required?
+                //tokens[i] = Regex.Replace(tokens[i], "&#8211;", "-");
+                //tokens[i] = Regex.Replace(tokens[i], "&#8217;", "'");
 
                 if (!tokens[i].EndsWith("</item>")) // Unneeded token, skipping it
                     continue;
 
                 var tmpTitle = ExtractString(ref tokens[i], "<title>", "</title>");
+                tmpTitle = Utility.RemoveBracketContentFromTitle(tmpTitle);
                 var tmpDate = DateTime.Parse(ExtractString(ref tokens[i], "<pubDate>", "</pubDate>"));
                 var tmpLink = ExtractString(ref tokens[i], "<link>", "</link>");
                 AnimeList.Add(new AnimeItem()

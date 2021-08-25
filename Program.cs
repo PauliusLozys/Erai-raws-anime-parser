@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 
 namespace AnimeDownloader
 {
@@ -7,23 +6,22 @@ namespace AnimeDownloader
     {
         static void Main(string[] args)
         {
-            Utility.SetSettingsFromFile(out int linkIndex);
-            string[] downloadLinks = new string[] {"https://erai-raws.info/rss-1080-magnet",
-                                                   "https://erai-raws.info/rss-720-magnet",
-                                                   "https://erai-raws.info/rss-480-magnet"};
+            Utility.SetSettingsFromFile();
+            string[] downloadLinks = new string[] {"https://www.erai-raws.info/episodes/feed/?res=1080p&type=magnet&subs%5B0%5D=us",
+                                                   "https://www.erai-raws.info/episodes/feed/?res=720p&type=magnet&subs%5B0%5D=us",
+                                                   "https://www.erai-raws.info/episodes/feed/?res=SD&type=magnet&subs%5B0%5D=us"};
             string choice;
 
             WatchListManager watchList = new WatchListManager();
             AnimeManager anime = new AnimeManager(watchList);
 
-            AppDomain.CurrentDomain.ProcessExit += ExitEvent;
-            void ExitEvent(object sender, EventArgs e)
+            AppDomain.CurrentDomain.ProcessExit += (object sender, EventArgs e) => 
             {
                 watchList.WriteWatchListFile();
-                Utility.SaveSettingsToFile(ref linkIndex);
-            }
+                Utility.SaveSettingsToFile();
+            };
 
-            anime.ParseItemsXml(ref downloadLinks[linkIndex]);
+            anime.ParseItemsXml(ref downloadLinks[Utility.AnimeQualityIndex]);
 
             while (true)
             {
@@ -50,7 +48,7 @@ namespace AnimeDownloader
                 }
                 else if (choice == "r") // Refresh
                 {
-                    anime.ParseItemsXml(ref downloadLinks[linkIndex]);
+                    anime.ParseItemsXml(ref downloadLinks[Utility.AnimeQualityIndex]);
                 }
                 else if (choice == "h")
                 {
@@ -58,16 +56,16 @@ namespace AnimeDownloader
                 }
                 else if (choice == "sq") // Switch quality
                 {
-                    Console.Write("0| 1080p\n1| 720p\n2| other\nPick quality: ");
+                    Console.Write("0| 1080p\n1| 720p\n2| SD\nPick quality: ");
                     choice = Console.ReadLine();
                     if (string.IsNullOrEmpty(choice))
                         continue;
                     if (int.TryParse(choice, out int index) && index < 3 && index >= 0)
                     {
-                        if (linkIndex == index)
+                        if (Utility.AnimeQualityIndex == index)
                             continue;
-                        linkIndex = index;
-                        anime.ParseItemsXml(ref downloadLinks[linkIndex]);
+                        Utility.AnimeQualityIndex = index;
+                        anime.ParseItemsXml(ref downloadLinks[Utility.AnimeQualityIndex]);
                     }
                     else
                         Utility.DisplayError($"ERROR: INVALID INDEX {choice} PROVIDED");

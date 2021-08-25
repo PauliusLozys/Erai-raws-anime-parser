@@ -159,7 +159,7 @@ namespace AnimeDownloader
             {
                 if (anime.Title.Contains(item.Title))
                 {
-                    int episodeNumber = Utility.GetAnimeEpisodeNumber(anime.Title);
+                    int episodeNumber = Utility.GetAnimeEpisodeNumberFromTitle(anime.Title);
                     if (episodeNumber > item.LatestEpisode)
                     {
                         // Newer version of the episode was found
@@ -200,7 +200,7 @@ namespace AnimeDownloader
             {
                 if (anime.Title.Contains(item.Title))
                 {
-                    int episodeNumber = Utility.GetAnimeEpisodeNumber(anime.Title);
+                    int episodeNumber = Utility.GetAnimeEpisodeNumberFromTitle(anime.Title);
                     if (episodeNumber == item.LatestEpisode)
                     {
                         item.IsDownloaded = true;
