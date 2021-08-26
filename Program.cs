@@ -12,6 +12,8 @@ namespace AnimeDownloader
                                                    "https://www.erai-raws.info/episodes/feed/?res=SD&type=magnet&subs%5B0%5D=us"};
             string choice;
 
+            string[] qualities = new string[] { "1080p", "720p", "SD" };
+
             WatchListManager watchList = new WatchListManager();
             AnimeManager anime = new AnimeManager(watchList);
 
@@ -56,7 +58,13 @@ namespace AnimeDownloader
                 }
                 else if (choice == "sq") // Switch quality
                 {
-                    Console.Write("0| 1080p\n1| 720p\n2| SD\nPick quality: ");
+                    for (int i = 0; i < qualities.Length; i++)
+                    {
+                        var check = Utility.AnimeQualityIndex == i ? "[current]" : string.Empty;
+                        Console.WriteLine($"{i}| {qualities[i]} {check}");
+                    }
+
+                    Console.Write("Pick quality: ");
                     choice = Console.ReadLine();
                     if (string.IsNullOrEmpty(choice))
                         continue;
